@@ -53,9 +53,50 @@
   justify-content: center;
   align-items: flex-start;
 }
+
 #show-apollo-query img:last-of-type {
   margin-left: 60px;
 }
+
+#show-apollo-mutate {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#show-apollo-mutate img:first-of-type {
+  width: 640px;
+}
+
+#show-apollo-mutate img:last-of-type {
+  margin-left: 30px;
+  width: 710px;  
+}
+
+#my-opinion-list {
+  display: flex;
+}
+
+#my-opinion-list ul {
+  list-style: none;
+  line-height: 35px;
+  color: black;
+  padding: 10px;
+}
+#my-opinion-list li {
+  margin-top: 30px;
+}
+
+#list-pros {
+  min-width: 450px;
+  background-color: #45b945;
+}
+
+#list-cons {
+  min-width: 600px;
+  background-color: #f13f3f;
+}
+
 h1 {
   line-height: 50px !important;
 }
