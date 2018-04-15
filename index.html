@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-	<title>REACT</title>
+	<title>AKRA Polska</title>
 
 	<link rel="stylesheet" href="css/reveal.css">
 	<link rel="stylesheet" href="css/theme/akra.css">
@@ -37,97 +37,78 @@
 				</div>
 			</section>
 			<section>
-				<h1>React divides UI into small reusable components</h1>
-				<img width="400px" data-src="https://www.kirupa.com/react/images/c_c_c_c_c_c_144.png" alt="Up arrow">
+				<h1>GraphQL on Front-end - what's wrong with REST?</h1>
+				<table id="comparisonTable">
+					<thead>
+							<th>GraphQL</th>
+							<th>REST</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>One endpoint to access whole API</td>
+							<td>Many endpoints with different schema</td>
+						</tr>
+						<tr>
+							<td>Retrieve only the data your client needs in a single request (flexibility)</td>
+							<td>Over/under fetching data due to REST nature</td>
+						</tr>
+						<tr>
+							<td>Whole API is documented and easily accessible  ( Insomia, GraphiQL)</td>
+							<td>We might have documentation ( but honestly - how often ? :D )</td>
+						</tr>
+					</tbody>
+				</table>
 			</section>
 			<section>
-				<h1>Component is behaving like a function for UI</h1>
-				<img data-src="./img/img08.png" alt="Up arrow">
+				<h1>Code sample - GraphQL vs REST</h1>
+				<div id="compare-REST-GraphQL-fetching-simple">
+					<p>REST</p>
+					<img data-src="./img/simpleRESTFetch.png" alt="Up arrow">
+					<p>GraphQL</p>
+					<img data-src="./img/simpleGraphQLFetch.png" alt="Up arrow">
+				</div>
 			</section>
 			<section>
-				<h1>Component can be also stateful</h1>
-				<iframe src="https://stackblitz.com/edit/akra-react-state-example?embed=1&file=index.js&hideExplorer=1&hideNavigation=1&view=preview"></iframe>
+				<h1>Code sample - GraphQL vs REST - but let's fetch more data :)</h1>
+				<div id="compare-REST-GraphQL-fetching-complex">
+						<img data-src="./img/complexFetchREST.png" alt="Up arrow">
+						<img data-src="./img/complexFetchGraphQL.png" alt="Up arrow">
+					</div>
 			</section>
 			<section>
-				<h1>Life without redux: Waterfall</h1>
-				<img width="500px" data-src="./img/img10.png" />
+				<h3>How to start with GraphQL?</h1>
+				<div id="start-with-graph-lists">
+						<div>
+								<h3>GraphQL clients:</h3>
+									<ul>
+										<li>No client</li>
+										<li>Apollo client (Meteor)</li>
+										<li>Relay (Facebook)</li>
+									</ul>
+						</div>
+						<div>
+								<h3>API exploration Tools</h3>
+								<ul>
+										<li>Insomia</li>
+										<li>GraphiQL</li>
+										<li>Apollo client chrome extension</li>
+								</ul>
+						</div>
+				</div>
 			</section>
 			<section>
-				<h1>Cons:</h1>
-				<ul style="text-align: start;">
-					<li>Code is hard to maintain.</li>
-					<li>Change in one props cause waterfall of changes to many other components</li>
-					<li>Components are depending on each other - hard to reuse components</li>
-				</ul>
-				<img width="400px" data-src="./img/img10.png" />
+				<h1 style="text-transform: uppercase;">Apollo client - let's fetch data!</h1>
+				<div id="show-apollo-query">
+						<img data-src="./img/apollo-query-data.png" alt="error">
+						<img data-src="./img/get_notes_query.png" alt="error">
+				</div>
+					
 			</section>
 			<section>
-				<h1>Redux for the rescue!</h1>
-				<img width="800px" data-src="./img/img11.png" />
+				<h1 style="text-transform: uppercase;">Apollo client - let's send data!</h1>
+				<img height="600px" data-src="./img/apollo-mutate.png" alt="Up arrow">
 			</section>
-			<section>
-				<h1>What went wrong? :(</h1>
-				<img width="800px" data-src="./img/img12.png" />
-			</section>
-			<section>
-				<h1>Cons:</h1>
-				<ul style="text-align: start;">
-					<li>Adding new action requires changes in two places: redux store and component</li>
-					<li>Each smart component requires additional code just to connect to redux</li>
-					<li>On large scale hard to maintain</li>
-					<li style="font-weight: bold;">
-						Multiple changes to redux store may create huge performance issues
-					</li>
-				</ul>
-				<img width="400px" data-src="./img/img12.png" />
-			</section>
-			<section>
-				<h1>Redux performance horror</h1>
-				<iframe src="https://stackblitz.com/edit/akra-redux-horror?ctl=1&embed=1&file=Table.js&hideNavigation=1"></iframe>
-			</section>
-			<section>
-				<h1>Same code without Redux ( using component state )</h1>
-				<iframe src="https://stackblitz.com/edit/akra-horror-no-redux?ctl=1&embed=1&file=Table.js&hideExplorer=1&hideNavigation=1&view=preview"></iframe>
-			</section>
-			<section>
-				<h1>Why is this happening?</h1>
-				<img width="800px" data-src="./img/img15.png" />
-			</section>
-			<section>
-				<section>
-					<h1>Data grouped by life time</h1>
-				</section>
-				<section>
-					<h1>Short-term</h1>
-					<p>Data that dies along with route</p>
-					<br/>
-					<ul>
-						<li>Unfinished form</li>
-					</ul>
-				</section>
-				<section>
-					<h1>Medium-term</h1>
-					<p>Data that survives route change but dies along with browser</p>
-					<br/>
-					<ul>
-						<li>User profile data</li>
-						<li>Shoping cart data</li>
-					</ul>
-				</section>
-				<section>
-					<h1>Long-term</h1>
-					<p>Data that survives even, if browser dies</p>
-					<br/>
-					<ul>
-						<li>Authorization token</li>
-					</ul>
-				</section>
-			</section>
-			<section>
-				<h1>So what should we do?</h1>
-				<h1>Short-term data -> use smart components without redux</h1>
-				<h1>Mid/long-term data -> use redux to persist reusable informations</h1>
-			</section>
+					
 			<section>
 				<h1 style="text-transform: uppercase;">Sorry for the long presentation. Here is a potato</h1>
 				<img src="https://userscontent2.emaze.com/images/0080e459-0175-4554-ac7b-8ed91ed42d3f/ddaf5a71-c264-4e5b-926d-f4c1479b1031.jpeg"/>

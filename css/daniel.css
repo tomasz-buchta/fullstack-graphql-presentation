@@ -1,3 +1,4 @@
+
 #firstHeading {
   font-size: 40px;
   line-height: 50px;
@@ -12,4 +13,49 @@
 #plus {
   margin: 10px;
   color: black;
+}
+
+#comparisonTable {
+  font-size: 20px;
+}
+
+#compare-REST-GraphQL-fetching-simple {
+  color: black;
+  margin-top: 50px;
+}
+
+#compare-REST-GraphQL-fetching-complex {
+  color: black;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+#compare-REST-GraphQL-fetching-complex img {
+  height: 340px;
+}
+
+#start-with-graph-lists > div {
+  margin-top: 50px;
+}
+
+#start-with-graph-lists li {
+  margin-top: 10px;
+  color: black;
+}
+
+#start-with-graph-lists ul {
+  list-style: none;
+}
+
+#show-apollo-query {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+#show-apollo-query img:last-of-type {
+  margin-left: 60px;
+}
+h1 {
+  line-height: 50px !important;
 }
