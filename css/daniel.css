@@ -1,0 +1,15 @@
+#firstHeading {
+  font-size: 40px;
+  line-height: 50px;
+}
+
+#initialLogosHolder {
+  display: flex;
+  justify-content:
+  center;align-items: center;
+}
+
+#plus {
+  margin: 10px;
+  color: black;
+}
