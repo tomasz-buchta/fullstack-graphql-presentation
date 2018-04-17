@@ -100,3 +100,8 @@
 h1 {
   line-height: 50px !important;
 }
+
+#query-example > iframe{
+  width: 100%;
+  height: 600px;
+}
