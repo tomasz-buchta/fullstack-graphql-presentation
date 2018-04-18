@@ -19,7 +19,7 @@
         link.rel = 'stylesheet';
         link.type = 'text/css';
         link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
-        document.getElementsByTagName('head') [0].appendChild(link);
+        document.getElementsByTagName('head')[0].appendChild(link);
     </script>
 </head>
 
@@ -29,19 +29,17 @@
             <section>
                 <h1 id="firstHeading">Fullstack Intro to GraphQL based on example application</h1>
                 <div id="initialLogosHolder">
-                    <img width="200px" data-src="https://cdn-images-1.medium.com/max/1200/1*Qedo3LOHardUQRDMVsv3bw.png"
-                 alt="error in image">
-                 <div id="plus">+</div>
-                <img width="300px" data-src="https://cdn-images-1.medium.com/max/1600/1*BIR94Q8MDPonvvFtsnUYLg.png"
-                 alt="error in image">
+                    <img width="200px" data-src="https://cdn-images-1.medium.com/max/1200/1*Qedo3LOHardUQRDMVsv3bw.png" alt="error in image">
+                    <div id="plus">+</div>
+                    <img width="300px" data-src="https://cdn-images-1.medium.com/max/1600/1*BIR94Q8MDPonvvFtsnUYLg.png" alt="error in image">
                 </div>
             </section>
             <section>
                 <h1>GraphQL on Front-end - what's wrong with REST?</h1>
                 <table id="comparisonTable">
                     <thead>
-                            <th>GraphQL</th>
-                            <th>REST</th>
+                        <th>GraphQL</th>
+                        <th>REST</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -53,7 +51,7 @@
                             <td>Over/under fetching data due to REST nature</td>
                         </tr>
                         <tr>
-                            <td>Whole API is documented and easily accessible  ( Insomia, GraphiQL)</td>
+                            <td>Whole API is documented and easily accessible ( Insomia, GraphiQL)</td>
                             <td>We might have documentation ( but honestly - how often ? :D )</td>
                         </tr>
                     </tbody>
@@ -64,95 +62,262 @@
                 <iframe src="http://graphql.org/swapi-graphql"></iframe>
             </section>
             <section>
-                <h1>Code sample - GraphQL vs REST</h1>
-                <pre>
-                    <code data-trim data-noescape>
-                        const rawResponse = await fetch('url')
-                        const response = await rawResponse.json()
-                    </code>
-                </pre>
-                <pre>
-                    <code data-trim data-noescape>
-                        const rawResponse = await fetch('url', {
-                            
-                        })
-                        const response = await rawResponse.json()
-                    </code>
-                </pre>
-                <div id="compare-REST-GraphQL-fetching-simple">
-                    <p>REST</p>
-                    <img data-src="./img/simpleRESTFetch.png" alt="Up arrow">
-                    <p>GraphQL</p>
-                    <img data-src="./img/simpleGraphQLFetch.png" alt="Up arrow">
-                </div>
+                <section>
+                    <h1>Code sample - GraphQL vs REST</h1>
+                </section>
+                <section>
+                    <pre>
+                        <code class="javascript" data-trim data-noescape>
+                          const rawResponse = await fetch('root/notes')
+                          const response = await rawResponse.json()
+                      </code>
+                    </pre>
+                </section>
+                <section>
+                    <pre>
+                        <code class="javascript" data-trim data-noescape>
+                          const rawResponse = await fetch('root/graphql', {
+                              method: 'POST',
+                              headers: { 'Content-type': 'application/json' },
+                              body: JSON.stringify({ query:`
+                                {
+                                    notes  {
+                                      id
+                                      title
+                                      body
+                                      comments {
+                                        id
+                                        body
+                                      }
+                                    }
+                                  }
+                              `})
+                          })
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                        <pre>
+                            <code style="font-size: 28px;" class="javascript" data-trim data-noescape>
+                                    {
+                                        "data": {
+                                          "notes": [
+                                            {
+                                              "id": "76",
+                                              "title": "Pickup milk from home",
+                                              "body": "I need this milk ASAP",
+                                              "comments": [
+                                                {
+                                                  "id": "261",
+                                                  "body": "Remember to pick up keys!"
+                                                }
+                                              ]
+                                            },
+                                            ...
+                                          ]
+                                        }
+                                      }
+                            </code>
+                        </pre>
+                    </section>
             </section>
             <section>
-                <h1>Code sample - GraphQL vs REST - but let's fetch more data :)</h1>
-                <div id="compare-REST-GraphQL-fetching-complex">
-                        <img data-src="./img/complexFetchREST.png" alt="Up arrow">
-                        <img data-src="./img/complexFetchGraphQL.png" alt="Up arrow">
-                    </div>
+                <section>
+                    <h1>Code sample - GraphQL vs REST - but let's fetch more data :)</h1>
+                </section>
+                <section>
+                    <pre>
+                        <code class="javascript" data-trim data-noescape>
+                          const rawResponseNotes = await fetch('root/notes')
+                          const responseNotes = await rawResponseNotes.json()
+
+                          const rawResponseMovies = await fetch('root/movies')
+                          const responseMovies = await rawResponseMovies.json()
+
+                          const rawResponseComics = await fetch('root/comics')
+                          const responseComics = await rawResponseComics.json()
+
+                          const rawResponseShows = await fetch('root/shows')
+                          const responseShows = await rawResponseShows.json()
+
+                          const rawResponseActors = await fetch('root/actors')
+                          const responseActors = await rawResponseActors.json()
+                      </code>
+                    </pre>
+                </section>
+                <section>
+                    <pre>
+                        <code class="javascript" data-trim data-noescape>
+                          const rawResponse = await fetch('root/graphql', {
+                              method: 'POST',
+                              headers: {
+                                  'Content-type': 'application/json'
+                              },
+                              body: JSON.stringify({ query:`
+                                  { 
+                                      notes  { title } 
+                                      movies { title } 
+                                      comics { title } 
+                                      shows  { title episode season } 
+                                      actors { name } 
+                                  }
+                              `})
+                          })
+                          const response = await rawResponse.json()
+                        </code>
+                    </pre>
+                </section>
+                <section>
+                        <pre>
+                            <code style="font-size: 28px;" class="graphql" data-trim data-noescape>
+                                    {
+                                        "data": {
+                                          "notes": [{
+                                            "id": 72,
+                                          }],
+                                          "movies": [{
+                                            "title": "Inconceivable",
+                                          }],
+                                          "comics": [{
+                                            "title": "Spider-Man",
+                                          }],
+                                          "shows": [{
+                                            "title": "Lucifer",
+                                            "season": 2,
+                                            "episode": 4
+                                          }],
+                                          "actors": [{
+                                            "name": "Nicolas Cage",
+                                          }]
+                                        }
+                                      }
+                            </code>
+                        </pre>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>GraphQL is not only fetching - Mutations</h1>
+                </section>
+                <section>
+                        <pre>
+                                <code class="graphql" data-trim data-noescape>
+                                        mutation {
+                                          addNote(title: "...", body: "...") {
+                                            id
+                                            title
+                                          }
+                                        }
+                                </code>
+                            </pre>
+                </section>
+                <section>
+                        <pre>
+                            <code class="graphql" data-trim data-noescape>
+                                    {
+                                        "data": {
+                                          "addNote": {
+                                            "id": "91",
+                                            "title": "Pick up milk!",
+                                            "body": "Don't forget this time"
+                                          }
+                                        }
+                                      }
+                            </code>
+                        </pre>
+                </section>
+                <section>
+                        <h1>Fragments - let's make our life easier</h1>
+                        <pre>
+                            <code class="graphql" data-trim data-noescape>
+                                    fragment NOTE_FIELDS on Note {
+                                        id
+                                        state
+                                        title
+                                        body
+                                        comments {
+                                            id
+                                            body
+                                        }
+                                        tags
+                                    }                                    
+                            </code>
+                        </pre>
+                </section>
+                <section>
+                        <h1>Mutation can have variables!</h1>
+                        <pre>
+                            <code class="graphql" class="graphql" data-trim data-noescape>
+                                mutation ADD_NOTE($title: String!, $body: String) {
+                                	addNote(title: $title, body: $body) {
+                                		...NOTE_FIELDS
+                                	}
+                                }
+                            </code>
+                        </pre>
+                </section>
             </section>
             <section>
                 <h3>How to start with GraphQL?</h1>
                     <a>https://www.howtographql.com/</a>
-                <div id="start-with-graph-lists">
+                    <div id="start-with-graph-lists">
                         <div>
-                                <h3>GraphQL clients:</h3>
-                                    <ul>
-                                        <li>No client</li>
-                                        <li>Apollo client (Meteor)</li>
-                                        <li>Relay (Facebook)</li>
-                                    </ul>
+                            <h3>GraphQL clients:</h3>
+                            <ul>
+                                <li>No client</li>
+                                <li>Apollo client (Meteor)</li>
+                                <li>Relay (Facebook)</li>
+                            </ul>
                         </div>
                         <div>
-                                <h3>API exploration Tools</h3>
-                                <ul>
-                                        <li>Insomia</li>
-                                        <li>GraphiQL</li>
-                                        <li>Apollo client chrome extension</li>
-                                </ul>
+                            <h3>API exploration Tools</h3>
+                            <ul>
+                                <li>Insomia</li>
+                                <li>GraphiQL</li>
+                                <li>Apollo client chrome extension</li>
+                            </ul>
                         </div>
-                </div>
+                    </div>
             </section>
             <section>
                 <h1 style="text-transform: uppercase;">Apollo client - let's fetch data!</h1>
                 <div id="show-apollo-query">
-                        <img data-src="./img/apollo-query-data.png" alt="error">
-                        <img data-src="./img/get_notes_query.png" alt="error">
+                    <img data-src="./img/apollo-query-data.png" alt="error">
+                    <img data-src="./img/get_notes_query.png" alt="error">
                 </div>
             </section>
             <section>
                 <h1 style="text-transform: uppercase;">Apollo client - let's send data!</h1>
                 <div id="show-apollo-mutate">
-                        <img data-src="./img/add-note-mutation.png" alt="error">
-                        <img data-src="./img/mutation-with-fragment.png" alt="error">
+                    <img data-src="./img/add-note-mutation.png" alt="error">
+                    <img data-src="./img/mutation-with-fragment.png" alt="error">
                 </div>
             </section>
             <section>
-                    <h1 style="text-transform: uppercase;">Apollo client - cache</h1>
-                    <img data-src="./img/apollo-cache.png" alt="error">
+                <h1 style="text-transform: uppercase;">Apollo client - cache</h1>
+                <img data-src="./img/apollo-cache.png" alt="error">
             </section>
             <section>
-                    <h1 style="text-transform: uppercase;">Apollo client - my opinion after while</h1>
-                    <div id="my-opinion-list">	
-                        <ul id="list-pros">
-                            <li>Good for small, simple projects</li>
-                            <li>Nice way to structure code</li>
-                        </ul>
-                        <ul id="list-cons">
-                                <li>Huge community - but most of people seek help</li>
-                                <li>Forcing to use apollo local state (they dropped redux integration)</li>
-                                <li>Cache manupulation is complex</li>
-                                <li>Poor documentation</li>
-                                <li>Too much responsibility for open source framework</li>
-                        </ul>
-                    </div>
-                    
+                <h1 style="text-transform: uppercase;">Apollo client - my opinion after while</h1>
+                <div id="my-opinion-list">
+                    <ul id="list-pros">
+                        <li>Good for small, simple projects</li>
+                        <li>Nice way to structure code</li>
+                    </ul>
+                    <ul id="list-cons">
+                        <li>Huge community - but most of people seek help</li>
+                        <li>Forcing to use apollo local state (they dropped redux integration)</li>
+                        <li>Cache manupulation is complex</li>
+                        <li>Poor documentation</li>
+                        <li>Too much responsibility for open source framework</li>
+                    </ul>
+                </div>
+
             </section>
             <section>
                 <h1 style="text-transform: uppercase;">Sorry for the long presentation. Here is a potato</h1>
-                <img src="https://userscontent2.emaze.com/images/0080e459-0175-4554-ac7b-8ed91ed42d3f/ddaf5a71-c264-4e5b-926d-f4c1479b1031.jpeg"/>
+                <img src="https://userscontent2.emaze.com/images/0080e459-0175-4554-ac7b-8ed91ed42d3f/ddaf5a71-c264-4e5b-926d-f4c1479b1031.jpeg"
+                />
             </section>
         </div>
         </section>
