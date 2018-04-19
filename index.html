@@ -27,13 +27,23 @@
     <div class="reveal">
         <div class="slides">
             <section>
-                <h1 id="firstHeading">Fullstack Intro to GraphQL based on example application</h1>
-                <div id="initialLogosHolder">
-                    <img width="200px" data-src="https://cdn-images-1.medium.com/max/1200/1*Qedo3LOHardUQRDMVsv3bw.png" alt="error in image">
-                    <div id="plus">+</div>
-                    <img width="300px" data-src="https://cdn-images-1.medium.com/max/1600/1*BIR94Q8MDPonvvFtsnUYLg.png" alt="error in image">
-                </div>
+                    <section>
+                            <h1 id="firstHeading">Fullstack Intro to GraphQL based on example application</h1>
+                            <div id="initialLogosHolder">
+                                <img width="350px" data-src="./img/rubyQL.png" alt="error in image">
+                                <div id="plus">+</div>
+                                <img width="200px" data-src="https://cdn-images-1.medium.com/max/1200/1*Qedo3LOHardUQRDMVsv3bw.png" alt="error in image">
+                                <div id="plus">+</div>
+                                <img width="300px" data-src="https://cdn-images-1.medium.com/max/1600/1*BIR94Q8MDPonvvFtsnUYLg.png" alt="error in image">
+                            </div>
+                    </section>
+               
+                <section>
+                    <iframe style="    width: 100%; height: 60vh;
+                    " src="https://keeper-client.herokuapp.com/"></iframe>
+                </section>
             </section>
+            
             <section>
                 <h1>GraphQL on Front-end - what's wrong with REST?</h1>
                 <table id="comparisonTable">
@@ -52,7 +62,7 @@
                         </tr>
                         <tr>
                             <td>Whole API is documented and easily accessible ( Insomia, GraphiQL)</td>
-                            <td>We might have documentation ( but honestly - how often ? :D )</td>
+                            <td>We might have documentation </br>( documentation is not integrated into editor, often only public API is documented )</td>
                         </tr>
                     </tbody>
                 </table>
@@ -63,7 +73,7 @@
             </section>
             <section>
                 <section>
-                    <h1>Code sample - GraphQL vs REST</h1>
+                    <h1>Code sample - GraphQL vs REST - Overfetching</h1>
                 </section>
                 <section>
                     <pre>
@@ -72,6 +82,28 @@
                           const response = await rawResponse.json()
                       </code>
                     </pre>
+                </section>
+                <section>
+                        <pre>
+                                <code class="json" data-trim data-noescape>
+                                {
+                                      "notes": [
+                                        {
+                                          "id": "76",
+                                          "title": "Pickup milk from home",
+                                          "body": "I need this milk ASAP",
+                                          "comments": [
+                                            {
+                                              "id": "261",
+                                              "body": "Remember to pick up keys!"
+                                            },
+                                            ...lot of other comments which we don't want
+                                          ]
+                                        }
+                                      ]
+                                }
+                                </code>
+                              </pre>
                 </section>
                 <section>
                     <pre>
@@ -84,11 +116,6 @@
                                     notes  {
                                       id
                                       title
-                                      body
-                                      comments {
-                                        id
-                                        body
-                                      }
                                     }
                                   }
                               `})
@@ -104,14 +131,7 @@
                                           "notes": [
                                             {
                                               "id": "76",
-                                              "title": "Pickup milk from home",
-                                              "body": "I need this milk ASAP",
-                                              "comments": [
-                                                {
-                                                  "id": "261",
-                                                  "body": "Remember to pick up keys!"
-                                                }
-                                              ]
+                                              "title": "Pickup milk from home"
                                             },
                                             ...
                                           ]
@@ -123,74 +143,96 @@
             </section>
             <section>
                 <section>
-                    <h1>Code sample - GraphQL vs REST - but let's fetch more data :)</h1>
+                    <h1>Code sample - GraphQL vs REST - but let's fetch more data - underfetching :)</h1>
                 </section>
                 <section>
                     <pre>
                         <code class="javascript" data-trim data-noescape>
-                          const rawResponseNotes = await fetch('root/notes')
-                          const responseNotes = await rawResponseNotes.json()
-
+                          /** Get list of movies */
                           const rawResponseMovies = await fetch('root/movies')
                           const responseMovies = await rawResponseMovies.json()
+                          
+                          ... parsing data
 
-                          const rawResponseComics = await fetch('root/comics')
+                          /** Get list of actors for movies */
+                          const rawResponseActors = await fetch('root/cast')
+                          const responseActors = await rawResponseActors.json()
+                          
+                          ... parsing data
+                          
+                          /** Get list of planets for actors */
+                          const rawResponseComics = await fetch('root/planets')
                           const responseComics = await rawResponseComics.json()
 
-                          const rawResponseShows = await fetch('root/shows')
-                          const responseShows = await rawResponseShows.json()
-
-                          const rawResponseActors = await fetch('root/actors')
-                          const responseActors = await rawResponseActors.json()
+                          ... merging data
                       </code>
                     </pre>
                 </section>
                 <section>
                     <pre>
                         <code class="javascript" data-trim data-noescape>
-                          const rawResponse = await fetch('root/graphql', {
-                              method: 'POST',
-                              headers: {
-                                  'Content-type': 'application/json'
-                              },
+                          await fetch('root/graphql', {
+                              ...
                               body: JSON.stringify({ query:`
-                                  { 
-                                      notes  { title } 
-                                      movies { title } 
-                                      comics { title } 
-                                      shows  { title episode season } 
-                                      actors { name } 
-                                  }
+                                {
+                                    allFilms {
+                                      films {
+                                        title
+                                        characterConnection {
+                                          characters {
+                                            name
+                                            homeworld {
+                                              name
+                                              population
+                                              terrains
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }                                  
                               `})
                           })
-                          const response = await rawResponse.json()
                         </code>
                     </pre>
                 </section>
                 <section>
                         <pre>
-                            <code style="font-size: 28px;" class="graphql" data-trim data-noescape>
+                            <code class="graphql" data-trim data-noescape>
                                     {
                                         "data": {
-                                          "notes": [{
-                                            "id": 72,
-                                          }],
-                                          "movies": [{
-                                            "title": "Inconceivable",
-                                          }],
-                                          "comics": [{
-                                            "title": "Spider-Man",
-                                          }],
-                                          "shows": [{
-                                            "title": "Lucifer",
-                                            "season": 2,
-                                            "episode": 4
-                                          }],
-                                          "actors": [{
-                                            "name": "Nicolas Cage",
-                                          }]
+                                          "allFilms": {
+                                            "films": [
+                                              {
+                                                "title": "A New Hope",
+                                                "characterConnection": {
+                                                  "characters": [
+                                                    {
+                                                      "name": "Luke Skywalker",
+                                                      "homeworld": {
+                                                        "name": "Tatooine",
+                                                        "population": 200000,
+                                                        "terrains": [
+                                                          "desert"
+                                                        ]
+                                                      }
+                                                    },
+                                                    {
+                                                      "name": "C-3PO",
+                                                      "homeworld": {
+                                                        "name": "Tatooine",
+                                                        "population": 200000,
+                                                        "terrains": [
+                                                          "desert"
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                            }
                                         }
-                                      }
+                                    }
+                                }
                             </code>
                         </pre>
                 </section>
@@ -270,7 +312,7 @@
                             </ul>
                         </div>
                         <div>
-                            <h3>API exploration Tools</h3>
+                            <h3>Developer tools</h3>
                             <ul>
                                 <li>Insomia</li>
                                 <li>GraphiQL</li>
