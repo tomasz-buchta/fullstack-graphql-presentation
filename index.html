@@ -322,39 +322,122 @@
                     </div>
             </section>
             <section>
-                <h1 style="text-transform: uppercase;">Apollo client - let's fetch data!</h1>
-                <div id="show-apollo-query">
-                    <img data-src="./img/apollo-query-data.png" alt="error">
-                    <img data-src="./img/get_notes_query.png" alt="error">
-                </div>
+                <section><h1 style="text-transform: uppercase;">Apollo client - let's fetch data!</h1></section>
+                <section>
+                        <pre>
+                                <code class="javascript" data-trim data-noescape>
+                                        query GET_NOTES(
+                                            $title: String
+                                            $tags: [String]
+                                            $state: String
+                                            ) {
+                                            noteSearch(
+                                                title: $title,
+                                                tags: $tags,
+                                                state: $state
+                                            ) {
+                                                id
+                                                state
+                                                title
+                                                body
+                                                comments {
+                                                    id
+                                                    body
+                                                }
+                                                tags
+                                            }
+                                        }
+                                                                     
+                                </code>
+                            </pre>
+                </section>
+                <section>
+                        <pre>
+                                <code class="html" data-trim data-noescape>
+                                        &lt;Query query={GET_NOTES} variables={{ title: filterByTitle, state: filterByState }}&gt;
+                                            {
+                                              ({ data: { noteSearch }, loading, error }) =&gt; {
+                                                 return (
+                                                   &lt;NotesBoard
+                                                      isLoading={isLoading || loading}
+                                                      toggleModal={this.toggleModal}
+                                                      onNoteClick={this.onNoteClick}
+                                                      onNoteRemove={this.onNoteRemove}
+                                                      isModalVisible={isModalVisible}
+                                                      noteID={noteID}
+                                                      notesList={noteSearch}
+                                                   /&gt;
+                                                 )
+                                              }
+                                            }
+                                       &lt;/Query&gt;                              
+                                </code>
+                            </pre>
+                </section>
             </section>
             <section>
-                <h1 style="text-transform: uppercase;">Apollo client - let's send data!</h1>
-                <div id="show-apollo-mutate">
-                    <img data-src="./img/add-note-mutation.png" alt="error">
-                    <img data-src="./img/mutation-with-fragment.png" alt="error">
-                </div>
+                <section>
+                        <h1 style="text-transform: uppercase;">Apollo client - let's send data!</h1>
+                </section>
+                <section>
+                        <pre>
+                                <code class="javascript" data-trim data-noescape>
+                                        fragment NOTE_FIELDS on Note {
+                                            id
+                                            state
+                                            title
+                                            body
+                                            comments {
+                                                id
+                                                body
+                                            }
+                                            tags
+                                        }                                        
+                                </code>
+                            </pre>
+                </section>
+                <section>
+                        <pre>
+                                <code class="javascript" data-trim data-noescape>
+                                        #import "./Note.fragment.gql"
+
+                                        mutation ADD_NOTE($title: String!, $body: String) {
+                                        	addNote(title: $title, body: $body) {
+                                        		...NOTE_FIELDS
+                                        	}
+                                        }
+                                </code>
+                            </pre>
+                </section>
+                <section>
+                        <pre>
+                                <code class="javascript" data-trim data-noescape>
+                                        onAddNoteModalSubmit = async ({ title, body }) => {
+                                            const { addNote } = this.props;
+                                            await addNote({
+                                                variables: {
+                                                    title,
+                                                    body
+                                                },
+                                                /**
+                                                 * Direct access to cache in order to update existing Notes without refetching existing notes
+                                                 */
+                                                update: (store, { data: { addNote } }) => {
+                                                    const cachedData = store.readQuery({ query: GET_NOTES });
+                                                    cachedData.notes = cachedData.notes.concat([addNote]);
+                                                    store.writeQuery({ query: GET_NOTES, data: cachedData });
+                                                }
+                                            });
+                                        };
+                                    
+                                         export default compose(graphql(ADD_NOTE, { name: 'addNote' }))(AddNoteContainer);                          
+                                </code>
+                            </pre>
+                </section>
             </section>
             <section>
                 <h1 style="text-transform: uppercase;">Apollo client - cache</h1>
                 <img data-src="./img/apollo-cache.png" alt="error">
-            </section>
-            <section>
-                <h1 style="text-transform: uppercase;">Apollo client - my opinion after while</h1>
-                <div id="my-opinion-list">
-                    <ul id="list-pros">
-                        <li>Good for small, simple projects</li>
-                        <li>Nice way to structure code</li>
-                    </ul>
-                    <ul id="list-cons">
-                        <li>Huge community - but most of people seek help</li>
-                        <li>Forcing to use apollo local state (they dropped redux integration)</li>
-                        <li>Cache manupulation is complex</li>
-                        <li>Poor documentation</li>
-                        <li>Too much responsibility for open source framework</li>
-                    </ul>
-                </div>
-
             </section>
             <section>
                 <h1 style="text-transform: uppercase;">Sorry for the long presentation. Here is a potato</h1>
