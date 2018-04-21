@@ -37,13 +37,139 @@
                                 <img width="300px" data-src="https://cdn-images-1.medium.com/max/1600/1*BIR94Q8MDPonvvFtsnUYLg.png" alt="error in image">
                             </div>
                     </section>
-               
                 <section>
                     <iframe style="    width: 100%; height: 60vh;
                     " src="https://keeper-client.herokuapp.com/"></iframe>
                 </section>
             </section>
-            
+            <section>
+                <h1>What is GraphQL?</h1>
+            </section>
+            <section>
+                <h1>Why should I care?</h1>
+                <ul>
+                    <li>Avoid data under/over fetching</li>
+                    <li>Built in type system</li>
+                    <li>Nice development tools ( autocompletion )</li>
+                </ul>
+            </section>
+            <section>
+                <h1>Who use GraphQL?</h1>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Github (ruby)</li>
+                    <li>Shopify (ruby)</li>
+                    <li>Yelp</li>
+                </ul>
+            </section>
+            <section>
+                <h1>GraphQL from Ruby perspective</h1>
+                <ul>
+                    <li>self documenting (really)</li>
+                    <li>type system</li>
+                    <li>explorative API - expose the model hierarchy via API (hussle free)</li>
+                    <li>Just use your own code</li>
+                </ul>
+            </section>
+            <section>
+                <h1>Basic building blocks</h1>
+                <h3>Schema</h3>
+                <pre>
+                    <code class="ruby" data-trim data-noescape>
+                        Types::QueryType = GraphQL::ObjectType.define do
+                        name "Query"
+                      
+                        field :noteSearch, function: Resolvers::SearchNote.new
+                      
+                        field :yetAnotherQuery, function: Resolvers::YetAnotherQuery.new
+                      end                      
+                    </code>
+                  </pre>
+            </section>
+            <section>
+                <h2>Object - defines how to serialize ruby object to GraphQL</h2>
+                <pre>
+                    <code class="ruby" data-trim data-noescape>
+                        Types::NoteType = GraphQL::ObjectType.define do
+                          name "Note"
+                          field :comments, !types[Types::CommentType]
+
+                          field :id, types.ID
+                          field :title, types.String
+                          field :body, types.String
+                          field :color, types.String
+                          field :tags, types[types.String], property: :tag_list
+
+                          interfaces [Types::WithTimestampsType]
+                        end
+                    </code>
+                  </pre>
+            </section>
+            <section>
+                <h1>Resolver - Interfaces for calling your ruby code from GraphQL</h1>
+                <pre>
+                    <code class="ruby" data-trim data-noescape>
+                        module Resolvers
+                        class SearchNote < GraphQL::Function
+                          argument :tags, types[types.String]
+                          argument :state, types.String
+                          argument :title, types.String
+                      
+                          type !types[Types::NoteType]
+                      
+                          def call(_obj, args, _ctx)
+                            NoteSearchService.new(args.to_h.symbolize_keys).call
+                          end
+                        end
+                      end                      
+                    </code>
+                  </pre>
+            </section>
+            <section>
+                <h1>Error handling</h1>
+                <ul>
+                    <li>Errors as part of your schema</li>
+                    <li>Use graphql-errors gem to provide schema wide error handling( But it uses exceptions :( )</li>
+                </ul>
+            </section>
+            <section>
+                <h1>Testing</h1>
+                <ul>
+                    <li>Don’t test schema</li>
+                    <li>Unit test what schema is calling</li>
+                    <li>E2E(Requests) specs</li>
+                </ul>
+            </section>
+            <section>
+                <h1>Handling complex queries</h1>
+                <span>Someone requesting a 20 level deep query might hit your server performance.</span>
+                <p>You may:</p>
+                <ul>
+                    <li>Limit the query depth( ex. no more that 5 levels)</li>
+                    <li>Limit the query complexity( You define operations complexity, and query cannot exceed max complexity)</li>
+                    <li>Complexity may be defined per user type. ( for ex infinite for admin users)</li>
+                </ul>
+            </section>
+            <section>
+                <h1>Subscriptions</h1>
+                <ul>
+                    <li>Clients can subscribe to queries</li>
+                    <li>Pusher and ActionCable backends available</li>
+                    <li>Beware of performance - don’t expect handling 2 millions of users on single instance</li>
+                </ul>
+            </section>
+            <section>
+                <h1>camelCase vs snake_case</h1>
+                <ul>
+                    <li>JS wants world to use camelCase</li>
+                    <li>Ruby prefers snake_case</li>
+                </ul>
+                <p>Our solution</p>
+                <p>
+                    Write your schema using camelCase :( and convert it to snake_case in resolver
+                    GraphQL v 1.8 class based api will provide field underscoring by itself
+                </p>
+            </section>
             <section>
                 <h1>GraphQL on Front-end - what's wrong with REST?</h1>
                 <table id="comparisonTable">
