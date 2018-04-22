@@ -519,33 +519,16 @@
                 </section>
                 <section>
                     <pre>
-                                <code class="javascript" data-trim data-noescape>
-                                        fragment NOTE_FIELDS on Note {
-                                            id
-                                            state
-                                            title
-                                            body
-                                            comments {
-                                                id
-                                                body
-                                            }
-                                            tags
-                                        }                                        
-                                </code>
-                            </pre>
-                </section>
-                <section>
-                    <pre>
-                                <code class="javascript" data-trim data-noescape>
-                                        #import "./Note.fragment.gql"
-
-                                        mutation ADD_NOTE($title: String!, $body: String) {
-                                        	addNote(title: $title, body: $body) {
-                                        		...NOTE_FIELDS
-                                        	}
-                                        }
-                                </code>
-                            </pre>
+                        <code class="javascript" data-trim data-noescape>
+                                #import "./Note.fragment.gql"
+                            
+                                mutation ADD_NOTE($title: String!, $body: String) {
+                                	addNote(title: $title, body: $body) {
+                                		...NOTE_FIELDS
+                                	}
+                                }
+                        </code>
+                    </pre>
                 </section>
                 <section>
                     <pre>
