@@ -55,6 +55,30 @@
                 </ul>
             </section>
             <section>
+                <h1>GraphQL on Front-end - what's wrong with REST?</h1>
+                <table id="comparisonTable">
+                    <thead>
+                        <th>GraphQL</th>
+                        <th>REST</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>One endpoint to access whole API</td>
+                            <td>Many endpoints with different schema</td>
+                        </tr>
+                        <tr>
+                            <td>Retrieve only the data your client needs in a single request (flexibility)</td>
+                            <td>Over/under fetching data due to REST nature</td>
+                        </tr>
+                        <tr>
+                            <td>Whole API is documented and easily accessible ( Insomia, GraphiQL)</td>
+                            <td>We might have documentation </br>( documentation is not integrated into editor, often only public
+                                API is documented )</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
                 <h1>Who use GraphQL?</h1>
                 <ul>
                     <li>Facebook</li>
@@ -67,12 +91,235 @@
                 <h1>How does query looks like?</h1>
                 <iframe src="https://graphql.org/swapi-graphql"></iframe>
             </section>
-            <section id="query-example">
+            <section>
                 <section>
-                    <h1>Let's modify data! - Mutation</h1>
+                    <h1>GraphQL is not only fetching - Mutations</h1>
+                </section>
+                <section style="flex-direction: row">
+                    <pre style="margin-right: 30px;">
+                                <code class="graphql" data-trim data-noescape>
+                                        mutation {
+                                          addNote(
+                                            title: "Pick up milk!",
+                                            body: "Don't forget this time") {
+                                            id
+                                            title
+                                          }
+                                        }
+                                </code>
+                            </pre>
+                    <pre>
+                                <code class="graphql" data-trim data-noescape>
+                                        {
+                                            "data": {
+                                              "addNote": {
+                                                "id": "91",
+                                                "title": "Pick up milk!",
+                                                "body": "Don't forget this time"
+                                              }
+                                            }
+                                          }
+                                </code>
+                            </pre>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>Code sample - GraphQL vs REST - Overfetching</h1>
+                </section>
+                <section style="flex-direction: row;">
+                    <pre style="margin-right: 30px;">
+                        <code class="javascript" data-trim data-noescape>
+                          const rawResponse = await fetch('root/notes')
+                          const response = await rawResponse.json()
+                      </code>
+                    </pre>
+                    <pre>
+                        <code class="json" data-trim data-noescape>
+                        {
+                              "notes": [
+                                {
+                                  "id": "76",
+                                  "title": "Pickup milk from home",
+                                  "body": "I need this milk ASAP",
+                                  "comments": [
+                                    {
+                                      "id": "261",
+                                      "body": "Remember to pick up keys!"
+                                    },
+                                    ...lot of other comments which we don't want
+                                  ]
+                                }
+                              ]
+                        }
+                        </code>
+                      </pre>
+                </section>
+                <section style="flex-direction: row;">
+                    <pre style="margin-right: 30px;">
+                        <code class="javascript" data-trim data-noescape>
+                          const rawResponse = await fetch('root/graphql', {
+                              method: 'POST',
+                              headers: { 'Content-type': 'application/json' },
+                              body: JSON.stringify({ query:`
+                                {
+                                    notes  {
+                                      id
+                                      title
+                                    }
+                                  }
+                              `})
+                          })
+                        </code>
+                    </pre>
+                    <pre>
+                        <code style="font-size: 28px;" class="javascript" data-trim data-noescape>
+                                {
+                                    "data": {
+                                      "notes": [
+                                        {
+                                          "id": "76",
+                                          "title": "Pickup milk from home"
+                                        },
+                                        ...
+                                      ]
+                                    }
+                                  }
+                        </code>
+                    </pre>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>Code sample - GraphQL vs REST - but let's fetch more data - underfetching :)</h1>
                 </section>
                 <section>
-                    <img width="900px" data-src="./img/mutation.png" alt="error in image">
+                    <pre>
+                        <code class="javascript" data-trim data-noescape>
+                          /** Get list of movies */
+                          const rawResponseMovies = await fetch('root/movies')
+                          const responseMovies = await rawResponseMovies.json()
+                          
+                          ... parsing data
+
+                          /** Get list of actors for movies */
+                          const rawResponseActors = await fetch('root/cast')
+                          const responseActors = await rawResponseActors.json()
+                          
+                          ... parsing data
+                          
+                          /** Get list of planets for actors */
+                          const rawResponseComics = await fetch('root/planets')
+                          const responseComics = await rawResponseComics.json()
+
+                          ... merging data
+                      </code>
+                    </pre>
+                </section>
+                <section style="flex-direction: row;">
+                    <pre style="margin-right: 30px;">
+                        <code class="javascript" data-trim data-noescape>
+                          await fetch('root/graphql', {
+                              ...
+                              body: JSON.stringify({ query:`
+                                {
+                                    allFilms {
+                                      films {
+                                        title
+                                        characterConnection {
+                                          characters {
+                                            name
+                                            homeworld {
+                                              name
+                                              population
+                                              terrains
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }                                  
+                              `})
+                          })
+                        </code>
+                    </pre>
+                    <pre>
+                        <code  style="font-size: 18px"  class="graphql" data-trim data-noescape>
+                                {
+                                    "data": {
+                                      "allFilms": {
+                                        "films": [
+                                          {
+                                            "title": "A New Hope",
+                                            "characterConnection": {
+                                              "characters": [
+                                                {
+                                                  "name": "Luke Skywalker",
+                                                  "homeworld": {
+                                                    "name": "Tatooine",
+                                                    "population": 200000,
+                                                    "terrains": [
+                                                      "desert"
+                                                    ]
+                                                  }
+                                                },
+                                                {
+                                                  "name": "C-3PO",
+                                                  "homeworld": {
+                                                    "name": "Tatooine",
+                                                    "population": 200000,
+                                                    "terrains": [
+                                                      "desert"
+                                                    ]
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </code>
+                </pre>
+                </section>
+            </section>
+            <section>
+
+                <section>
+                    <h1>Fragments</h1>
+                </section>
+                <section style="flex-direction: row">
+                    <pre style="margin-right: 30px;">
+                            <code class="graphql" data-trim data-noescape>
+                              fragment NOTE_FIELDS on Note {
+                                  id
+                                  state
+                                  title
+                                  body
+                                  comments {
+                                      id
+                                      body
+                                  }
+                                  tags
+                              }                                    
+                            </code>
+                        </pre>
+                    <pre>
+                            <code class="graphql" data-trim data-noescape>
+                                query GET_NOTE {
+                                    notes {
+                                        ...NOTE_FIELDS
+                                    }
+                                }                                                            
+                            </code>
+                        </pre>
+                </section>
+
+            </section>
+            <section>
+                <section>
+                    <h1>Variables</h1>
+                    <img src="./img/variables.png" />
                 </section>
             </section>
             <section>
@@ -182,258 +429,6 @@
                     Write your schema using camelCase :( and convert it to snake_case in resolver GraphQL v 1.8 class based api will provide
                     field underscoring by itself
                 </p>
-            </section>
-            <section>
-                <h1>GraphQL on Front-end - what's wrong with REST?</h1>
-                <table id="comparisonTable">
-                    <thead>
-                        <th>GraphQL</th>
-                        <th>REST</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>One endpoint to access whole API</td>
-                            <td>Many endpoints with different schema</td>
-                        </tr>
-                        <tr>
-                            <td>Retrieve only the data your client needs in a single request (flexibility)</td>
-                            <td>Over/under fetching data due to REST nature</td>
-                        </tr>
-                        <tr>
-                            <td>Whole API is documented and easily accessible ( Insomia, GraphiQL)</td>
-                            <td>We might have documentation </br>( documentation is not integrated into editor, often only public
-                                API is documented )</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-            <section>
-                <section>
-                    <h1>Code sample - GraphQL vs REST - Overfetching</h1>
-                </section>
-                <section>
-                    <pre>
-                        <code class="javascript" data-trim data-noescape>
-                          const rawResponse = await fetch('root/notes')
-                          const response = await rawResponse.json()
-                      </code>
-                    </pre>
-                </section>
-                <section>
-                    <pre>
-                                <code class="json" data-trim data-noescape>
-                                {
-                                      "notes": [
-                                        {
-                                          "id": "76",
-                                          "title": "Pickup milk from home",
-                                          "body": "I need this milk ASAP",
-                                          "comments": [
-                                            {
-                                              "id": "261",
-                                              "body": "Remember to pick up keys!"
-                                            },
-                                            ...lot of other comments which we don't want
-                                          ]
-                                        }
-                                      ]
-                                }
-                                </code>
-                              </pre>
-                </section>
-                <section>
-                    <pre>
-                        <code class="javascript" data-trim data-noescape>
-                          const rawResponse = await fetch('root/graphql', {
-                              method: 'POST',
-                              headers: { 'Content-type': 'application/json' },
-                              body: JSON.stringify({ query:`
-                                {
-                                    notes  {
-                                      id
-                                      title
-                                    }
-                                  }
-                              `})
-                          })
-                        </code>
-                    </pre>
-                </section>
-                <section>
-                    <pre>
-                            <code style="font-size: 28px;" class="javascript" data-trim data-noescape>
-                                    {
-                                        "data": {
-                                          "notes": [
-                                            {
-                                              "id": "76",
-                                              "title": "Pickup milk from home"
-                                            },
-                                            ...
-                                          ]
-                                        }
-                                      }
-                            </code>
-                        </pre>
-                </section>
-            </section>
-            <section>
-                <section>
-                    <h1>Code sample - GraphQL vs REST - but let's fetch more data - underfetching :)</h1>
-                </section>
-                <section>
-                    <pre>
-                        <code class="javascript" data-trim data-noescape>
-                          /** Get list of movies */
-                          const rawResponseMovies = await fetch('root/movies')
-                          const responseMovies = await rawResponseMovies.json()
-                          
-                          ... parsing data
-
-                          /** Get list of actors for movies */
-                          const rawResponseActors = await fetch('root/cast')
-                          const responseActors = await rawResponseActors.json()
-                          
-                          ... parsing data
-                          
-                          /** Get list of planets for actors */
-                          const rawResponseComics = await fetch('root/planets')
-                          const responseComics = await rawResponseComics.json()
-
-                          ... merging data
-                      </code>
-                    </pre>
-                </section>
-                <section>
-                    <pre>
-                        <code class="javascript" data-trim data-noescape>
-                          await fetch('root/graphql', {
-                              ...
-                              body: JSON.stringify({ query:`
-                                {
-                                    allFilms {
-                                      films {
-                                        title
-                                        characterConnection {
-                                          characters {
-                                            name
-                                            homeworld {
-                                              name
-                                              population
-                                              terrains
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }                                  
-                              `})
-                          })
-                        </code>
-                    </pre>
-                </section>
-                <section>
-                    <pre>
-                            <code  style="font-size: 18px"  class="graphql" data-trim data-noescape>
-                                    {
-                                        "data": {
-                                          "allFilms": {
-                                            "films": [
-                                              {
-                                                "title": "A New Hope",
-                                                "characterConnection": {
-                                                  "characters": [
-                                                    {
-                                                      "name": "Luke Skywalker",
-                                                      "homeworld": {
-                                                        "name": "Tatooine",
-                                                        "population": 200000,
-                                                        "terrains": [
-                                                          "desert"
-                                                        ]
-                                                      }
-                                                    },
-                                                    {
-                                                      "name": "C-3PO",
-                                                      "homeworld": {
-                                                        "name": "Tatooine",
-                                                        "population": 200000,
-                                                        "terrains": [
-                                                          "desert"
-                                                        ]
-                                                      }
-                                                    }
-                                                  ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            </code>
-                        </pre>
-                </section>
-            </section>
-            <section>
-                <section>
-                    <h1>GraphQL is not only fetching - Mutations</h1>
-                </section>
-                <section>
-                    <pre>
-                                <code class="graphql" data-trim data-noescape>
-                                        mutation {
-                                          addNote(title: "...", body: "...") {
-                                            id
-                                            title
-                                          }
-                                        }
-                                </code>
-                            </pre>
-                </section>
-                <section>
-                    <pre>
-                            <code class="graphql" data-trim data-noescape>
-                                    {
-                                        "data": {
-                                          "addNote": {
-                                            "id": "91",
-                                            "title": "Pick up milk!",
-                                            "body": "Don't forget this time"
-                                          }
-                                        }
-                                      }
-                            </code>
-                        </pre>
-                </section>
-                <section>
-                    <h1>Fragments - let's make our life easier</h1>
-                    <pre>
-                            <code class="graphql" data-trim data-noescape>
-                                    fragment NOTE_FIELDS on Note {
-                                        id
-                                        state
-                                        title
-                                        body
-                                        comments {
-                                            id
-                                            body
-                                        }
-                                        tags
-                                    }                                    
-                            </code>
-                        </pre>
-                </section>
-                <section>
-                    <h1>Mutation can have variables!</h1>
-                    <pre>
-                            <code class="graphql" class="graphql" data-trim data-noescape>
-                                mutation ADD_NOTE($title: String!, $body: String) {
-                                	addNote(title: $title, body: $body) {
-                                		...NOTE_FIELDS
-                                	}
-                                }
-                            </code>
-                        </pre>
-                </section>
             </section>
             <section>
                 <h3>How to start with GraphQL?</h1>
