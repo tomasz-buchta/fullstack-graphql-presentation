@@ -108,6 +108,18 @@ h1 {
 
 .reveal code {
   padding: 20px;
-  font-size: 18px;
+  font-size: 28px;
   text-align: initial;
+}
+
+.reveal ul {
+  text-align: left;
+}
+
+.reveal section {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
 }

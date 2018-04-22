@@ -27,23 +27,24 @@
     <div class="reveal">
         <div class="slides">
             <section>
-                    <section>
-                            <h1 id="firstHeading">Fullstack Intro to GraphQL based on example application</h1>
-                            <div id="initialLogosHolder">
-                                <img width="350px" data-src="./img/rubyQL.png" alt="error in image">
-                                <div id="plus">+</div>
-                                <img width="200px" data-src="https://cdn-images-1.medium.com/max/1200/1*Qedo3LOHardUQRDMVsv3bw.png" alt="error in image">
-                                <div id="plus">+</div>
-                                <img width="300px" data-src="https://cdn-images-1.medium.com/max/1600/1*BIR94Q8MDPonvvFtsnUYLg.png" alt="error in image">
-                            </div>
-                    </section>
+                <section>
+                    <h1 id="firstHeading">Fullstack Intro to GraphQL based on example application</h1>
+                    <div id="initialLogosHolder">
+                        <img width="350px" data-src="./img/rubyQL.png" alt="error in image">
+                        <div id="plus">+</div>
+                        <img width="200px" data-src="https://cdn-images-1.medium.com/max/1200/1*Qedo3LOHardUQRDMVsv3bw.png" alt="error in image">
+                        <div id="plus">+</div>
+                        <img width="300px" data-src="https://cdn-images-1.medium.com/max/1600/1*BIR94Q8MDPonvvFtsnUYLg.png" alt="error in image">
+                    </div>
+                </section>
                 <section>
                     <iframe style="    width: 100%; height: 60vh;
                     " src="https://keeper-client.herokuapp.com/"></iframe>
                 </section>
             </section>
             <section>
-                <h1>What is GraphQL?</h1>
+                <h1>What is this GraphQL?</h1>
+                <img width="200px" data-src="https://cdn-images-1.medium.com/max/1200/1*Qedo3LOHardUQRDMVsv3bw.png" alt="error in image">
             </section>
             <section>
                 <h1>Why should I care?</h1>
@@ -61,6 +62,18 @@
                     <li>Shopify (ruby)</li>
                     <li>Yelp</li>
                 </ul>
+            </section>
+            <section id="query-example">
+                <h1>How does query looks like?</h1>
+                <iframe src="https://graphql.org/swapi-graphql"></iframe>
+            </section>
+            <section id="query-example">
+                <section>
+                    <h1>Let's modify data! - Mutation</h1>
+                </section>
+                <section>
+                    <img width="900px" data-src="./img/mutation.png" alt="error in image">
+                </section>
             </section>
             <section>
                 <h1>GraphQL from Ruby perspective</h1>
@@ -166,8 +179,8 @@
                 </ul>
                 <p>Our solution</p>
                 <p>
-                    Write your schema using camelCase :( and convert it to snake_case in resolver
-                    GraphQL v 1.8 class based api will provide field underscoring by itself
+                    Write your schema using camelCase :( and convert it to snake_case in resolver GraphQL v 1.8 class based api will provide
+                    field underscoring by itself
                 </p>
             </section>
             <section>
@@ -188,14 +201,11 @@
                         </tr>
                         <tr>
                             <td>Whole API is documented and easily accessible ( Insomia, GraphiQL)</td>
-                            <td>We might have documentation </br>( documentation is not integrated into editor, often only public API is documented )</td>
+                            <td>We might have documentation </br>( documentation is not integrated into editor, often only public
+                                API is documented )</td>
                         </tr>
                     </tbody>
                 </table>
-            </section>
-            <section id="query-example">
-                <h1>How does query looks like?</h1>
-                <iframe src="https://graphql.org/swapi-graphql"></iframe>
             </section>
             <section>
                 <section>
@@ -210,7 +220,7 @@
                     </pre>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                                 <code class="json" data-trim data-noescape>
                                 {
                                       "notes": [
@@ -250,7 +260,7 @@
                     </pre>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                             <code style="font-size: 28px;" class="javascript" data-trim data-noescape>
                                     {
                                         "data": {
@@ -265,7 +275,7 @@
                                       }
                             </code>
                         </pre>
-                    </section>
+                </section>
             </section>
             <section>
                 <section>
@@ -323,8 +333,8 @@
                     </pre>
                 </section>
                 <section>
-                        <pre>
-                            <code class="graphql" data-trim data-noescape>
+                    <pre>
+                            <code  style="font-size: 18px"  class="graphql" data-trim data-noescape>
                                     {
                                         "data": {
                                           "allFilms": {
@@ -368,7 +378,7 @@
                     <h1>GraphQL is not only fetching - Mutations</h1>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                                 <code class="graphql" data-trim data-noescape>
                                         mutation {
                                           addNote(title: "...", body: "...") {
@@ -380,7 +390,7 @@
                             </pre>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                             <code class="graphql" data-trim data-noescape>
                                     {
                                         "data": {
@@ -395,8 +405,8 @@
                         </pre>
                 </section>
                 <section>
-                        <h1>Fragments - let's make our life easier</h1>
-                        <pre>
+                    <h1>Fragments - let's make our life easier</h1>
+                    <pre>
                             <code class="graphql" data-trim data-noescape>
                                     fragment NOTE_FIELDS on Note {
                                         id
@@ -413,8 +423,8 @@
                         </pre>
                 </section>
                 <section>
-                        <h1>Mutation can have variables!</h1>
-                        <pre>
+                    <h1>Mutation can have variables!</h1>
+                    <pre>
                             <code class="graphql" class="graphql" data-trim data-noescape>
                                 mutation ADD_NOTE($title: String!, $body: String) {
                                 	addNote(title: $title, body: $body) {
@@ -448,9 +458,11 @@
                     </div>
             </section>
             <section>
-                <section><h1 style="text-transform: uppercase;">Apollo client - let's fetch data!</h1></section>
                 <section>
-                        <pre>
+                    <h1 style="text-transform: uppercase;">Apollo client - let's fetch data!</h1>
+                </section>
+                <section>
+                    <pre>
                                 <code class="javascript" data-trim data-noescape>
                                         query GET_NOTES(
                                             $title: String
@@ -478,7 +490,7 @@
                             </pre>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                                 <code class="html" data-trim data-noescape>
                                         &lt;Query query={GET_NOTES} variables={{ title: filterByTitle, state: filterByState }}&gt;
                                             {
@@ -503,10 +515,10 @@
             </section>
             <section>
                 <section>
-                        <h1 style="text-transform: uppercase;">Apollo client - let's send data!</h1>
+                    <h1 style="text-transform: uppercase;">Apollo client - let's send data!</h1>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                                 <code class="javascript" data-trim data-noescape>
                                         fragment NOTE_FIELDS on Note {
                                             id
@@ -523,7 +535,7 @@
                             </pre>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                                 <code class="javascript" data-trim data-noescape>
                                         #import "./Note.fragment.gql"
 
@@ -536,7 +548,7 @@
                             </pre>
                 </section>
                 <section>
-                        <pre>
+                    <pre>
                                 <code class="javascript" data-trim data-noescape>
                                         onAddNoteModalSubmit = async ({ title, body }) => {
                                             const { addNote } = this.props;
